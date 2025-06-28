@@ -29,8 +29,9 @@ function App() {
 
 export default App
 
+// DataFetch way is wrong way
 function DataFetching({data, isLoading}) {
-  
+  // const [data, setData] = useState([])
 
   //always call when re-render. Re-render is call by setData -> getData()
   // async function getData() {
