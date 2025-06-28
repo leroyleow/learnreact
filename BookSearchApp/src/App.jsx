@@ -1,15 +1,16 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import NavBar from './components/NavBar'
-import Footer from './components/Footer'
-import { useEffect, useState } from 'react';
-import BookList from './components/BookList';
-import fetchBooks from './services/api-client';
-import useBooks from './services/useBooks';
+import "bootstrap/dist/css/bootstrap.min.css";
+import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
+import { useEffect, useState } from "react";
+import BookList from "./components/BookList";
+import fetchBooks from "./services/api-client";
+import useBooks from "./services/useBooks";
+import BookDetail from "./components/BookDetail";
 
 function App() {
+  const [selectedBook, setSelectedBook] = useState(null);
+  const { books, isLoading, setSearchTerm } = useBooks("Python");
 
-  const {books, isLoading, setSearchTerm} = useBooks('Python')
-  
   // comment code move to useBook [custom hook]
   // useEffect(()=> {
   //   fetchData();
@@ -21,10 +22,9 @@ function App() {
 
   //   //     console.log("BOOKData::", books);
   //   //   })
-    
+
   // },[searchTerm]);
 
-  
   // // https://www.googleapis.com/books/v1/volumes?q=javascript
   // const fetchData = async () => {
   //   setIsLoading(true);
@@ -41,7 +41,7 @@ function App() {
   //       console.log("Failed to fetch books:", error)
   //     }
   //     setIsLoading(false);
-  //   } 
+  //   }
   // };
   // useEffect(()=>{
   //   setIsLoading(false);
@@ -51,19 +51,30 @@ function App() {
   function handleSearch(query) {
     setSearchTerm(query);
   }
-  
-  
+
+  function handleSeeMore(book) {
+    setSelectedBook(book);
+  }
+
+  function handleBookModalClose() {
+    setSelectedBook(null);
+  }
+
   return (
     <>
       <NavBar onSearch={handleSearch} />
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        <BookList books={books} />
+        <BookList books={books} onSeeMore={handleSeeMore} />
+      )}
+
+      {selectedBook && (
+        <BookDetail book={selectedBook} onClose={handleBookModalClose} />
       )}
       <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
